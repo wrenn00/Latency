@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PROJECTS, ALL_CATEGORIES, type Category } from "@/data/projects";
 import { ProjectCard } from "@/app/components/ProjectCard";
 import { CategoryFilter } from "@/app/components/CategoryFilter";
-import { CustomCursor } from "@/app/components/CustomCursor";
 import { LiveClock } from "@/app/components/LiveClock";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -21,7 +20,6 @@ const SOCIAL = [
 export default function WorkPage() {
   const [selected, setSelected] = useState<Category | null>(null);
 
-  // Count per category
   const counts = useMemo(() => {
     const map: Record<string, number> = {};
     for (const p of PROJECTS) {
@@ -30,7 +28,6 @@ export default function WorkPage() {
     return map;
   }, []);
 
-  // Filtered list
   const filtered = useMemo(
     () => (selected ? PROJECTS.filter((p) => p.category === selected) : PROJECTS),
     [selected]
@@ -38,11 +35,11 @@ export default function WorkPage() {
 
   return (
     <>
-      <CustomCursor />
-
-      <div className="min-h-[100dvh] flex flex-col bg-[#FAFAFA]">
-
-        {/* ── NAV ───────────────────────────────────────────────────────── */}
+      <div
+        className="min-h-[100dvh] flex flex-col"
+        style={{ background: "var(--bg)" }}
+      >
+        {/* ── NAV ────────────────────────────────────────────────────── */}
         <motion.nav
           className="flex items-center justify-between px-6 sm:px-10 pt-7 sm:pt-9 shrink-0"
           initial={{ opacity: 0 }}
@@ -52,43 +49,78 @@ export default function WorkPage() {
           <Link
             href="/"
             data-interactive="true"
-            className="flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.18em] uppercase text-[#111]"
+            className="flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.18em] uppercase"
+            style={{ color: "var(--fg)" }}
           >
             LATENCY
             <span
-              className="inline-block w-1.5 h-1.5 rounded-full bg-[#0051FF]"
-              style={{ animation: "blink 1s step-end infinite" }}
+              className="inline-block w-1.5 h-1.5 rounded-full"
+              style={{ background: "var(--accent)", animation: "glowPulse 2s ease-in-out infinite" }}
             />
           </Link>
 
-          <div className="flex items-center gap-5 sm:gap-7 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px]">
-            <span className="text-[#111] opacity-100 border-b border-[#111]">work</span>
-            <Link href="/#about"   data-interactive="true" className="text-[#111] opacity-40 hover:opacity-100 transition-opacity duration-150">about</Link>
-            <Link href="/#contact" data-interactive="true" className="text-[#111] opacity-40 hover:opacity-100 transition-opacity duration-150">contact</Link>
+          <div
+            className="flex items-center gap-5 sm:gap-7 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.12em] uppercase"
+          >
+            <span
+              className="border-b"
+              style={{ color: "var(--fg)", borderColor: "var(--fg)" }}
+            >
+              work
+            </span>
+            <Link
+              href="/#about"
+              data-interactive="true"
+              className="transition-opacity duration-150"
+              style={{ color: "var(--fg-muted)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
+            >
+              about
+            </Link>
+            <Link
+              href="/#contact"
+              data-interactive="true"
+              className="transition-opacity duration-150"
+              style={{ color: "var(--fg-muted)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
+            >
+              contact
+            </Link>
           </div>
         </motion.nav>
 
-        {/* ── PAGE HEADER ───────────────────────────────────────────────── */}
+        {/* ── PAGE HEADER ────────────────────────────────────────────── */}
         <motion.div
           className="px-6 sm:px-10 pt-14 pb-8"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.08, ease: EASE }}
         >
-          <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] uppercase opacity-30 mb-2">
+          <p
+            className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] uppercase mb-2"
+            style={{ color: "var(--fg-muted)", opacity: 0.4 }}
+          >
             // selected work
           </p>
           <div className="flex items-baseline gap-3">
-            <h1 className="font-[family-name:var(--font-mono)] text-[22px] sm:text-[28px] text-[#111] tracking-tight">
+            <h1
+              className="font-[family-name:var(--font-mono)] text-[22px] sm:text-[28px] tracking-tight"
+              style={{ color: "var(--fg)" }}
+            >
               {selected ?? "All Projects"}
             </h1>
-            <span className="font-[family-name:var(--font-mono)] text-[13px] opacity-30 tabular-nums">
+            <span
+              className="font-[family-name:var(--font-mono)] text-[13px] tabular-nums"
+              style={{ color: "var(--fg-muted)" }}
+            >
               ({filtered.length})
             </span>
           </div>
         </motion.div>
 
-        {/* ── MOBILE FILTER BAR ─────────────────────────────────────────── */}
+        {/* ── MOBILE FILTER BAR ──────────────────────────────────────── */}
         <motion.div
           className="lg:hidden px-6 sm:px-10 pb-6"
           initial={{ opacity: 0 }}
@@ -104,9 +136,8 @@ export default function WorkPage() {
           />
         </motion.div>
 
-        {/* ── CONTENT: sidebar + grid ────────────────────────────────────── */}
+        {/* ── CONTENT: sidebar + grid ─────────────────────────────────── */}
         <div className="flex-1 flex gap-10 xl:gap-16 px-6 sm:px-10 pb-24">
-
           {/* Desktop filter sidebar */}
           <motion.aside
             className="hidden lg:block w-[160px] xl:w-[180px] shrink-0"
@@ -143,23 +174,32 @@ export default function WorkPage() {
             </AnimatePresence>
 
             {filtered.length === 0 && (
-              <p className="font-[family-name:var(--font-mono)] text-[13px] opacity-30 pt-8">
+              <p
+                className="font-[family-name:var(--font-mono)] text-[13px] pt-8"
+                style={{ color: "var(--fg-muted)" }}
+              >
                 no projects in this category.
               </p>
             )}
           </div>
         </div>
 
-        {/* ── FOOTER ────────────────────────────────────────────────────── */}
-        <footer className="shrink-0 flex items-center justify-between px-6 sm:px-10 pb-6 sm:pb-8 border-t border-[#EBEBEB] pt-5">
+        {/* ── FOOTER ─────────────────────────────────────────────────── */}
+        <footer
+          className="shrink-0 flex items-center justify-between px-6 sm:px-10 pb-6 sm:pb-8 pt-5"
+          style={{ borderTop: "1px solid var(--border)" }}
+        >
           <LiveClock />
-          <div className="flex items-center gap-5 sm:gap-6 font-[family-name:var(--font-mono)] text-[11px] tracking-wider">
+          <div className="flex items-center gap-5 sm:gap-6 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase">
             {SOCIAL.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
                 data-interactive="true"
-                className="text-[#111] opacity-40 hover:opacity-100 transition-opacity duration-150"
+                className="transition-all duration-150"
+                style={{ color: "var(--fg-muted)", opacity: 0.5 }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.color = "var(--fg)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.5"; e.currentTarget.style.color = "var(--fg-muted)"; }}
               >
                 {label}
               </a>
@@ -169,7 +209,10 @@ export default function WorkPage() {
       </div>
 
       <style>{`
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes glowPulse {
+          0%, 100% { opacity: 0.6; box-shadow: 0 0 4px rgba(0,81,255,0.35); }
+          50%       { opacity: 1;   box-shadow: 0 0 10px rgba(0,81,255,0.6); }
+        }
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>

@@ -9,7 +9,6 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 interface GalleryCardProps {
   project: Project;
-  /** Diagonal stagger delay (col + row) * 0.03 */
   delay?: number;
   onOpen: (project: Project) => void;
 }
@@ -19,10 +18,19 @@ export function GalleryCard({ project, delay = 0, onOpen }: GalleryCardProps) {
 
   return (
     <motion.button
-      layoutId={undefined}
       layout
-      className="relative block w-full text-left overflow-hidden cursor-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0051FF]"
-      style={{ aspectRatio: "3 / 4", background: project.accentColor }}
+      className="relative block w-full text-left overflow-hidden cursor-none focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
+      style={{
+        aspectRatio: "3 / 4",
+        background: project.accentColor,
+        // Accent glow border on hover instead of dark overlay
+        boxShadow: hovered
+          ? "inset 0 0 0 1px var(--accent), 0 0 24px var(--accent-glow)"
+          : "inset 0 0 0 0px transparent",
+        transition: hovered
+          ? "box-shadow 200ms ease"
+          : "box-shadow 600ms ease",
+      }}
       initial={{ opacity: 0, scale: 0.97 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -33,7 +41,7 @@ export function GalleryCard({ project, delay = 0, onOpen }: GalleryCardProps) {
       data-interactive="true"
       aria-label={`Open ${project.title}`}
     >
-      {/* Thumbnail image */}
+      {/* Thumbnail */}
       <Image
         src={project.images[0]}
         alt={project.title}
@@ -46,28 +54,34 @@ export function GalleryCard({ project, delay = 0, onOpen }: GalleryCardProps) {
         }}
       />
 
-      {/* Dark hover overlay */}
-      <motion.div
-        className="absolute inset-0 bg-black pointer-events-none"
-        animate={{ opacity: hovered ? 0.42 : 0 }}
-        transition={{ duration: 0.3, ease: EASE }}
-      />
-
-      {/* Info — slides up from bottom on hover */}
+      {/* Hover info — slides up from bottom */}
       <motion.div
         className="absolute inset-x-0 bottom-0 px-3 pb-3 pt-8 pointer-events-none"
         style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
         }}
         animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 8 }}
         transition={{ duration: 0.3, ease: EASE }}
       >
-        <p className="font-[family-name:var(--font-mono)] text-[12px] text-white leading-snug truncate">
+        <p
+          className="font-[family-name:var(--font-mono)] text-[12px] leading-snug truncate"
+          style={{ color: "var(--fg)" }}
+        >
           {project.title}
         </p>
-        <p className="font-[family-name:var(--font-mono)] text-[10px] text-white/60 mt-0.5">
+        <p
+          className="font-[family-name:var(--font-mono)] text-[10px] mt-0.5"
+          style={{ color: "rgba(242,242,242,0.55)" }}
+        >
           {project.year} · {project.category}
         </p>
+        {/* Accent underline under title */}
+        <motion.div
+          className="mt-1.5 h-[1px] rounded-full"
+          style={{ background: "var(--accent)" }}
+          animate={{ width: hovered ? "40%" : "0%" }}
+          transition={{ duration: 0.3, delay: 0.05, ease: EASE }}
+        />
       </motion.div>
     </motion.button>
   );

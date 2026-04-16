@@ -2,22 +2,19 @@
 
 import { useEffect, useState } from "react";
 
-// Formats the current time as "SEL HH:MM:SS"
+// Formats as "SEL // HH:MM:SS"
 // SWAP: replace "SEL" with your city code — "NYC", "TYO", "LON", etc.
 function formatTime(d: Date): string {
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
   const ss = String(d.getSeconds()).padStart(2, "0");
-  return `SEL ${hh}:${mm}:${ss}`;
+  return `SEL // ${hh}:${mm}:${ss}`;
 }
 
 export function LiveClock() {
-  // Initialize synchronously with current time — no empty-string flash on mount.
   const [time, setTime] = useState(() => formatTime(new Date()));
 
   useEffect(() => {
-    // Align the interval to the next full second so the display ticks in sync
-    // with the system clock rather than drifting by the component's mount offset.
     const msUntilNextSecond = 1000 - (Date.now() % 1000);
     let intervalId: ReturnType<typeof setInterval>;
 
@@ -32,12 +29,17 @@ export function LiveClock() {
     };
   }, []);
 
+  // The "//" separator renders in --accent so the clock has a single brand accent
+  const parts = time.split("//");
+
   return (
     <span
-      className="font-[family-name:var(--font-mono)] text-[11px] tracking-wider tabular-nums"
-      style={{ opacity: 0.5 }}
+      className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.08em] tabular-nums"
+      style={{ color: "var(--fg-muted)" }}
     >
-      {time}
+      {parts[0]}
+      <span style={{ color: "var(--accent)" }}>//</span>
+      {parts[1]}
     </span>
   );
 }

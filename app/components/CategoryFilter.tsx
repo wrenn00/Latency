@@ -7,11 +7,9 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 interface CategoryFilterProps {
   categories: Category[];
-  /** Count of projects per category */
   counts: Record<string, number>;
   selected: Category | null;
   onSelect: (c: Category | null) => void;
-  /** "sidebar" = vertical list (desktop), "bar" = horizontal scrollable row (mobile) */
   layout?: "sidebar" | "bar";
 }
 
@@ -27,19 +25,21 @@ function FilterItem({ label, count, active, onClick }: FilterItemProps) {
     <motion.button
       onClick={onClick}
       data-interactive="true"
-      className="relative flex items-center justify-between gap-3 w-full text-left group"
+      className="relative flex items-center justify-between gap-3 w-full text-left group cursor-none focus:outline-none"
       whileTap={{ scale: 0.97 }}
       transition={{ duration: 0.12, ease: EASE }}
     >
-      {/* Active indicator bar */}
+      {/* Active indicator — accent color with glow */}
       <motion.span
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] rounded-full bg-[#111]"
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] rounded-full"
+        style={{ background: "var(--accent)", boxShadow: "0 0 6px var(--accent-glow)" }}
         animate={{ height: active ? "70%" : "0%", opacity: active ? 1 : 0 }}
         transition={{ duration: 0.2, ease: EASE }}
       />
 
       <motion.span
-        className="font-[family-name:var(--font-mono)] text-[12px] tracking-wide pl-4"
+        className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.08em] pl-4"
+        style={{ color: "var(--fg)" }}
         animate={{ opacity: active ? 1 : 0.38, x: active ? 2 : 0 }}
         transition={{ duration: 0.2, ease: EASE }}
       >
@@ -48,7 +48,8 @@ function FilterItem({ label, count, active, onClick }: FilterItemProps) {
 
       <motion.span
         className="font-[family-name:var(--font-mono)] text-[10px] tabular-nums"
-        animate={{ opacity: active ? 0.6 : 0.25 }}
+        style={{ color: "var(--fg-muted)" }}
+        animate={{ opacity: active ? 0.6 : 0.22 }}
         transition={{ duration: 0.2 }}
       >
         {count}
@@ -57,30 +58,22 @@ function FilterItem({ label, count, active, onClick }: FilterItemProps) {
   );
 }
 
-// ── Horizontal pill row (mobile / compact) ───────────────────────────────────
-function PillItem({
-  label,
-  count,
-  active,
-  onClick,
-}: FilterItemProps) {
+function PillItem({ label, count, active, onClick }: FilterItemProps) {
   return (
     <button
       onClick={onClick}
       data-interactive="true"
-      className="shrink-0 font-[family-name:var(--font-mono)] text-[11px] tracking-wide px-3 py-1 rounded-[4px] border transition-none"
+      className="shrink-0 font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase px-3 py-1 cursor-none focus:outline-none"
       style={{
-        background: active ? "#111111" : "#F0F0F0",
-        borderColor: active ? "#111111" : "#E5E5E5",
-        color: active ? "#FAFAFA" : "#111111",
-        transition: "background 150ms, border-color 150ms, color 150ms",
+        background:  active ? "var(--fg)"          : "var(--bg-elevated)",
+        border:      `1px solid ${active ? "var(--fg)" : "var(--border)"}`,
+        color:       active ? "var(--bg)"           : "var(--fg-muted)",
+        boxShadow:   active ? "0 0 12px var(--accent-glow)" : "none",
+        transition:  "background 150ms, border-color 150ms, color 150ms, box-shadow 300ms",
       }}
     >
       {label}
-      <span
-        className="ml-1.5 tabular-nums"
-        style={{ opacity: active ? 0.6 : 0.4 }}
-      >
+      <span className="ml-1.5 tabular-nums" style={{ opacity: active ? 0.5 : 0.35 }}>
         {count}
       </span>
     </button>
@@ -118,10 +111,12 @@ export function CategoryFilter({
     );
   }
 
-  // sidebar layout
   return (
     <nav className="flex flex-col gap-0.5">
-      <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.18em] uppercase opacity-30 mb-3 pl-4">
+      <p
+        className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.18em] uppercase mb-3 pl-4"
+        style={{ color: "var(--fg-muted)", opacity: 0.4 }}
+      >
         filter
       </p>
       <FilterItem

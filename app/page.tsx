@@ -3,14 +3,10 @@
  *  LATENCY — DAN  |  Personal Portfolio
  * ─────────────────────────────────────────────────────────────────
  *  SWAP GUIDE:
- *    Avatar image  → replace the <span className="w-8 h-8 …">D</span>
- *                    in components/InlineInteraction.tsx (DanWord)
- *                    with <img src="/avatar.jpg" … className="w-8 h-8 rounded-full object-cover" />
+ *    Avatar image  → replace the <span>DAN</span> in DanWord
+ *                    (components/InlineInteraction.tsx) with a real image
  *
  *    Social links  → search "SWAP: links" below and update href values
- *
- *    Selected Work → search "SWAP: projects" below and update the
- *                    PROJECTS array with real titles, years, and tags
  *
  *    Clock city    → open components/LiveClock.tsx and replace
  *                    "SEL" with your city code (e.g. "NYC", "TYO", "LON")
@@ -22,20 +18,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  DanWord,
-  BetweenWord,
-  TimingWord,
-  LatencyWord,
-  HatsWord,
-  UiUxWord,
-  LateWord,
-  GraphicDesignWord,
-  AdvertisingWord,
-  ThingsWord,
-  XrDesignWord,
-  DiscomfortWord,
+  DanWord, BetweenWord, TimingWord, LatencyWord, HatsWord,
+  UiUxWord, LateWord, GraphicDesignWord, AdvertisingWord,
+  ThingsWord, XrDesignWord, DiscomfortWord,
 } from "./components/InlineInteraction";
-import { CustomCursor } from "./components/CustomCursor";
 import { LiveClock } from "./components/LiveClock";
 import { WorkGallery } from "./components/WorkGallery";
 
@@ -52,12 +38,12 @@ function HeroParagraph() {
 
   return (
     <motion.div
-      className="text-[14px] sm:text-[15px] leading-[1.85] text-[#111111] font-[family-name:var(--font-mono)]"
+      className="text-[14px] sm:text-[15px] leading-[1.85] font-[family-name:var(--font-mono)]"
+      style={{ color: "var(--fg)" }}
       initial={{ opacity: 0, y: 6 }}
       animate={visible ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, ease: EASE }}
     >
-      {/* Paragraph 1 */}
       <p className="mb-5">
         {"Yo! I\u2019m\u00A0"}
         <span data-interactive="true"><DanWord /></span>
@@ -68,7 +54,6 @@ function HeroParagraph() {
         {"\u00A0\u2014 not just how things look, but when they happen."}
       </p>
 
-      {/* Paragraph 2 */}
       <p className="mb-5">
         {"I work under the name\u00A0"}
         <span data-interactive="true"><LatencyWord /></span>
@@ -77,7 +62,6 @@ function HeroParagraph() {
         {"\u00A0them. Fast isn\u2019t the goal. The right timing is."}
       </p>
 
-      {/* Paragraph 3 */}
       <p>
         {"I wear many different\u00A0"}
         <span data-interactive="true"><HatsWord /></span>
@@ -97,6 +81,14 @@ function HeroParagraph() {
         <span data-interactive="true"><DiscomfortWord /></span>
         {"."}
       </p>
+
+      {/* "Scroll or drag" hint — gently pulses */}
+      <p
+        className="mt-8 text-[11px] tracking-[0.12em]"
+        style={{ color: "var(--fg-muted)", animation: "gentlePulse 3s ease-in-out infinite" }}
+      >
+        scroll or drag to explore
+      </p>
     </motion.div>
   );
 }
@@ -105,35 +97,45 @@ function HeroParagraph() {
 export default function Page() {
   return (
     <>
-      <CustomCursor />
-
-      {/* ── HERO — full viewport, no scroll ────────────────────────── */}
-      <section className="relative h-[100dvh] flex flex-col bg-[#FAFAFA] overflow-hidden">
-
-        {/* Top navigation */}
+      {/* ── HERO — full viewport ──────────────────────────────────────── */}
+      <section
+        className="relative h-[100dvh] flex flex-col overflow-hidden"
+        style={{ background: "var(--bg)" }}
+      >
+        {/* Navigation */}
         <motion.nav
           className="flex items-center justify-between px-6 sm:px-10 pt-7 sm:pt-9 shrink-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.45, ease: EASE }}
         >
-          {/* Logo mark */}
-          <div className="flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.18em] uppercase text-[#111]">
+          {/* Logo */}
+          <div
+            className="flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.18em] uppercase"
+            style={{ color: "var(--fg)" }}
+          >
             LATENCY
+            {/* Dot: accent glow pulse instead of step blink */}
             <span
-              className="inline-block w-1.5 h-1.5 rounded-full bg-[#0051FF]"
-              style={{ animation: "blink 1s step-end infinite" }}
+              className="inline-block w-1.5 h-1.5 rounded-full"
+              style={{
+                background: "var(--accent)",
+                animation: "glowPulse 2s ease-in-out infinite",
+              }}
             />
           </div>
 
-          {/* Nav links — SWAP: links */}
-          <div className="flex items-center gap-5 sm:gap-7 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px]">
+          {/* Nav links — SWAP: update href values */}
+          <div className="flex items-center gap-5 sm:gap-7 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.12em] uppercase">
             {(["work", "about", "contact"] as const).map((item) => (
               <a
                 key={item}
                 href={`#${item}`}
                 data-interactive="true"
-                className="text-[#111] opacity-40 hover:opacity-100 transition-opacity duration-150"
+                className="transition-opacity duration-150"
+                style={{ color: "var(--fg-muted)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
               >
                 {item}
               </a>
@@ -141,14 +143,14 @@ export default function Page() {
           </div>
         </motion.nav>
 
-        {/* Hero copy — vertically centered in remaining space */}
+        {/* Hero copy — centered in remaining space */}
         <div className="flex-1 flex items-center justify-center px-6 sm:px-10 overflow-hidden">
           <div className="w-full max-w-[720px]">
             <HeroParagraph />
           </div>
         </div>
 
-        {/* Bottom footer strip */}
+        {/* Footer strip */}
         <motion.footer
           className="shrink-0 flex items-center justify-between px-6 sm:px-10 pb-6 sm:pb-8"
           initial={{ opacity: 0 }}
@@ -158,7 +160,7 @@ export default function Page() {
           <LiveClock />
 
           {/* SWAP: links — update href values */}
-          <div className="flex items-center gap-5 sm:gap-6 font-[family-name:var(--font-mono)] text-[11px] tracking-wider">
+          <div className="flex items-center gap-5 sm:gap-6 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase">
             {[
               { label: "twitter", href: "https://twitter.com/" },
               { label: "email",   href: "mailto:dan@latency.work" },
@@ -168,46 +170,56 @@ export default function Page() {
                 key={label}
                 href={href}
                 data-interactive="true"
-                className="text-[#111] opacity-40 hover:opacity-100 transition-opacity duration-150"
+                className="transition-all duration-150"
+                style={{ color: "var(--fg-muted)", opacity: 0.5 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.color = "var(--fg)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "0.5";
+                  e.currentTarget.style.color = "var(--fg-muted)";
+                }}
               >
                 {label}
               </a>
             ))}
           </div>
         </motion.footer>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1.2, ease: EASE }}
-        >
-          <span
-            className="font-[family-name:var(--font-mono)] text-[9px] tracking-[0.22em] uppercase text-[#111] opacity-25"
-          >
-            scroll
-          </span>
-          <motion.span
-            className="font-[family-name:var(--font-mono)] text-[13px] text-[#111] opacity-25"
-            animate={{ y: [0, 4, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          >
-            ↓
-          </motion.span>
-        </motion.div>
       </section>
 
-      {/* ── WORK GALLERY — scrollable below fold ────────────────────── */}
-      <WorkGallery />
+      {/* ── SCROLL INDICATOR between hero and gallery ─────────────────── */}
+      <div
+        className="flex flex-col items-center py-10"
+        style={{ background: "var(--bg)" }}
+      >
+        <motion.p
+          className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase mb-3"
+          style={{ color: "var(--fg-muted)" }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: EASE }}
+        >
+          ↓ selected work
+        </motion.p>
 
-      {/* Blink keyframe for logo dot */}
-      <style>{`
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50%       { opacity: 0; }
-        }
-      `}</style>
+        {/* Vertical line with traveling dot */}
+        <div
+          className="relative overflow-hidden"
+          style={{ width: 1, height: 40, background: "var(--fg-subtle)" }}
+        >
+          <motion.div
+            className="absolute left-0 rounded-full"
+            style={{ width: 1, height: 8, background: "var(--accent)" }}
+            animate={{ y: ["-8px", "48px"] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+      </div>
+
+      {/* ── WORK GALLERY ──────────────────────────────────────────────── */}
+      <WorkGallery />
     </>
   );
 }
