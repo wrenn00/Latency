@@ -16,6 +16,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   DanWord, BetweenWord, TimingWord, LatencyWord, HatsWord,
@@ -124,14 +125,25 @@ export default function Page() {
             />
           </div>
 
-          {/* Nav links — SWAP: update href values */}
+          {/* Nav links */}
           <div className="flex items-center gap-5 sm:gap-7 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.12em] uppercase">
-            {(["work", "about", "contact"] as const).map((item) => (
+            <Link
+              href="/work"
+              data-interactive="true"
+              className="cursor-none transition-opacity duration-150 focus:outline-none"
+              style={{ color: "var(--fg-muted)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
+            >
+              work
+            </Link>
+            {/* about / contact — placeholder anchors until pages exist */}
+            {(["about", "contact"] as const).map((item) => (
               <a
                 key={item}
                 href={`#${item}`}
                 data-interactive="true"
-                className="transition-opacity duration-150"
+                className="cursor-none transition-opacity duration-150"
                 style={{ color: "var(--fg-muted)" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
@@ -187,26 +199,6 @@ export default function Page() {
         </motion.footer>
       </section>
 
-      {/* ── WORK LINK ─────────────────────────────────────────────────── */}
-      <div
-        className="flex flex-col items-center py-16"
-        style={{ background: "var(--bg)" }}
-      >
-        <motion.a
-          href="/work"
-          data-interactive="true"
-          className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.18em] uppercase cursor-none"
-          style={{ color: "var(--fg-muted)" }}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, ease: EASE }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
-        >
-          → selected work
-        </motion.a>
-      </div>
     </>
   );
 }
