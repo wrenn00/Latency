@@ -12,7 +12,7 @@ const jetbrainsMono = JetBrains_Mono({
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["300", "400", "500"],
+  weight: ["100", "300", "400", "500"],
 });
 
 export const metadata: Metadata = {

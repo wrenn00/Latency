@@ -25,6 +25,13 @@ export interface Project {
   accentColor: string;
   /** First image is used as the hero and cover card thumbnail. */
   images: string[];
+  // ── Media fields (WorkCanvas) ─────────────────────────────────────────────
+  /** Vimeo/MP4 URL for fullscreen ambient background. One-line swap when ready. */
+  videoUrl?: string;
+  /** Fallback poster image for the video element. */
+  posterUrl?: string;
+  /** Client/subject name, displayed separately from studio name. */
+  clientName?: string;
 }
 
 // Deterministic picsum seeds so images stay consistent across builds.

@@ -23,7 +23,6 @@ import {
   ThingsWord, XrDesignWord, DiscomfortWord,
 } from "./components/InlineInteraction";
 import { LiveClock } from "./components/LiveClock";
-import { WorkGallery } from "./components/WorkGallery";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -188,38 +187,26 @@ export default function Page() {
         </motion.footer>
       </section>
 
-      {/* ── SCROLL INDICATOR between hero and gallery ─────────────────── */}
+      {/* ── WORK LINK ─────────────────────────────────────────────────── */}
       <div
-        className="flex flex-col items-center py-10"
+        className="flex flex-col items-center py-16"
         style={{ background: "var(--bg)" }}
       >
-        <motion.p
-          className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase mb-3"
+        <motion.a
+          href="/work"
+          data-interactive="true"
+          className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.18em] uppercase cursor-none"
           style={{ color: "var(--fg-muted)" }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, ease: EASE }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
         >
-          ↓ selected work
-        </motion.p>
-
-        {/* Vertical line with traveling dot */}
-        <div
-          className="relative overflow-hidden"
-          style={{ width: 1, height: 40, background: "var(--fg-subtle)" }}
-        >
-          <motion.div
-            className="absolute left-0 rounded-full"
-            style={{ width: 1, height: 8, background: "var(--accent)" }}
-            animate={{ y: ["-8px", "48px"] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-          />
-        </div>
+          → selected work
+        </motion.a>
       </div>
-
-      {/* ── WORK GALLERY ──────────────────────────────────────────────── */}
-      <WorkGallery />
     </>
   );
 }
