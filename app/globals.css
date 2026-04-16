@@ -3,21 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-mono: var(--font-mono, "JetBrains Mono", "IBM Plex Mono", monospace);
+  --font-sans: var(--font-sans, "Inter", "Geist", sans-serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  cursor: none !important;
 }
 
+html,
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #FAFAFA;
+  color: #111111;
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  overflow-x: hidden;
+}
+
+/* Custom text selection */
+::selection {
+  background: #111111;
+  color: #FAFAFA;
 }
 
 @layer utilities {
