@@ -13,7 +13,7 @@ export default function GamffPage() {
       title="GAMFF 포스터"
       subtitle="경상북도 AI 메타버스 필름 페스티벌 2026"
       image={{
-        src:    "/images/works/gamff.jpg",
+        src:    "/images/works/gamff.png",
         alt:    "GAMFF 2026 포스터",
         width:  1980,
         height: 2800,
