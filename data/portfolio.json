@@ -1,8 +1,25 @@
 {
   "categories": [
-    { "id": "uiux",    "name": "UI/UX",          "order": 1 },
-    { "id": "xr",      "name": "XR Design",       "order": 2 },
-    { "id": "graphic", "name": "Graphic Design",  "order": 3 }
+    {
+      "id": "uiux",
+      "name": "UI/UX",
+      "order": 1
+    },
+    {
+      "id": "xr",
+      "name": "XR Design",
+      "order": 2
+    },
+    {
+      "id": "graphic",
+      "name": "Graphic Design",
+      "order": 3
+    },
+    {
+      "id": "advertising-design",
+      "name": "Advertising design",
+      "order": 4
+    }
   ],
   "works": []
 }
