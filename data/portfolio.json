@@ -13,10 +13,7 @@
       "thumbnail": "/images/works/arbor-day-80th.png",
       "year": "2025",
       "order": 1,
-      "accentColor": "#2D6A4F",
-      "description": "광복 80주년과 식목일 80주년이 겹치는 역사적 의미를 담은 포스터. 안중근 의사의 손에서 자라나는 나무를 통해 '희생을 바탕으로 한 나라의 번영'을 시각적으로 표현했다.",
-      "role": "Concept · Visual Design · Information Hierarchy",
-      "client": "산림청"
+      "accentColor": "#2D6A4F"
     },
     {
       "id": "world-ocean-forum",
@@ -25,10 +22,16 @@
       "thumbnail": "/images/works/world-ocean-forum.png",
       "year": "2025",
       "order": 2,
-      "accentColor": "#0D3B6E",
-      "description": "세계해양포럼의 주제 '초불확실성 시대, 파도를 넘어'를 시각화한 포스터. 복합적 글로벌 위기를 거대한 파도로 형상화하고 1인칭 항해 시점을 통해 지속 가능한 미래로의 돌파구를 상징적으로 표현했다.",
-      "role": "Concept · Visual Design · Symbolic Translation",
-      "client": "세계해양포럼"
+      "accentColor": "#0D3B6E"
+    },
+    {
+      "id": "gamff",
+      "title": "GAMFF 포스터",
+      "categoryId": "graphic",
+      "thumbnail": "/images/works/gamff.jpg",
+      "year": "2026",
+      "order": 3,
+      "accentColor": "#1A0533"
     },
     {
       "id": "the-red-line",
@@ -39,10 +42,7 @@
       "order": 1,
       "accentColor": "#CC0000",
       "type": "video",
-      "youtubeId": "SE9fLMtllAg",
-      "description": "폭스바겐 골프 GTI의 상징인 레드 스트립의 50년간의 변화를 따라가며 8세대에 이르러 하나의 선으로 완성되는 과정을 강렬한 빨강의 비주얼로 풀어낸 시네마틱 광고.",
-      "role": "Concept · Direction · AI Visual Generation · Editing",
-      "client": "폭스바겐 골프 GTI 대학생 AI 영상 광고 공모전"
+      "youtubeId": "SE9fLMtllAg"
     }
   ]
 }
