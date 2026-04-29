@@ -2,11 +2,11 @@
 
 import { memo } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import type { Work } from "@/lib/db";
 import { useWorkCanvas } from "./WorkCanvasContext";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+// No Framer Motion on cards — CSS-only hover and entry animation.
+// Framer Motion subscriptions on each card were adding JS overhead per-hover.
 
 interface Props {
   works: Work[];
@@ -29,18 +29,52 @@ export function WorkGrid({ works }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {works.map((work, i) => (
-        <WorkCard
-          key={work.id}
-          work={work}
-          index={i}
-          // Only first card is above-the-fold — eager load it for LCP
-          eager={i === 0}
-          onSelect={selectWork}
-        />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {works.map((work, i) => (
+          <WorkCard
+            key={work.id}
+            work={work}
+            index={i}
+            eager={i === 0}
+            onSelect={selectWork}
+          />
+        ))}
+      </div>
+
+      {/* CSS entry animation — no JS, no Framer Motion subscription */}
+      <style>{`
+        @keyframes cardEnter {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0);   }
+        }
+        .wg-card {
+          opacity: 0;
+          animation: cardEnter 320ms ease forwards;
+        }
+        /* CSS-only hover: scale image, dim overlay */
+        .wg-thumb-img {
+          transition: transform 280ms ease;
+          will-change: transform;
+        }
+        .wg-card:hover .wg-thumb-img {
+          transform: scale(1.025);
+        }
+        .wg-thumb-overlay {
+          opacity: 0;
+          transition: opacity 220ms ease;
+        }
+        .wg-card:hover .wg-thumb-overlay {
+          opacity: 1;
+        }
+        .wg-title {
+          transition: opacity 180ms ease;
+        }
+        .wg-card:hover .wg-title {
+          opacity: 0.65;
+        }
+      `}</style>
+    </>
   );
 }
 
@@ -51,18 +85,17 @@ interface CardProps {
   onSelect: (id: string) => void;
 }
 
-// memo prevents re-render when sibling cards change (e.g. hover state in parent)
+// memo: prevents sibling-card re-renders from propagating here
 const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: index * 0.06, ease: EASE }}
+    <div
+      className="wg-card"
+      style={{ animationDelay: `${index * 55}ms` }}
     >
       <button
         onClick={() => onSelect(work.id)}
         data-interactive="true"
-        className="group block w-full text-left cursor-none focus:outline-none"
+        className="block w-full text-left cursor-none focus:outline-none"
       >
         {/* Thumbnail */}
         <div
@@ -74,24 +107,23 @@ const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardPr
               src={work.thumbnail}
               alt={work.title}
               fill
-              // Use transform-based scale — GPU composited, no layout cost
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              className="object-cover wg-thumb-img"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              // Priority (eager) only on first card; rest lazy-load
               priority={eager}
               loading={eager ? undefined : "lazy"}
             />
           )}
+          {/* Hover overlay — CSS-only, no JS */}
           <div
-            className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100 pointer-events-none"
-            style={{ background: "rgba(0,0,0,0.15)" }}
+            className="wg-thumb-overlay absolute inset-0 pointer-events-none"
+            style={{ background: "rgba(0,0,0,0.14)" }}
           />
         </div>
 
         {/* Meta */}
-        <div className="mt-3 text-left">
+        <div className="mt-3">
           <p
-            className="font-[family-name:var(--font-mono)] text-[13px] tracking-[-0.01em] transition-opacity duration-200 group-hover:opacity-70"
+            className="wg-title font-[family-name:var(--font-mono)] text-[13px] tracking-[-0.01em]"
             style={{ color: "var(--fg)" }}
           >
             {work.title}
@@ -104,6 +136,6 @@ const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardPr
           </p>
         </div>
       </button>
-    </motion.div>
+    </div>
   );
 });

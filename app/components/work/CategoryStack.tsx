@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useWorkCanvas } from "./WorkCanvasContext";
+// No Framer Motion — motion.button + animate/whileHover created per-item
+// subscriptions that fired on every hover. Plain button with direct DOM
+// style writes has zero JS overhead after initial render.
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+import { useWorkCanvas } from "./WorkCanvasContext";
 
 export function CategoryStack() {
   const { categories, filterCategory, setFilter } = useWorkCanvas();
@@ -18,23 +19,24 @@ export function CategoryStack() {
       {items.map(({ label, value }) => {
         const active = filterCategory === value;
         return (
-          <motion.button
+          <button
             key={value}
             onClick={() => setFilter(value)}
             data-interactive="true"
             className="text-left cursor-none font-[family-name:var(--font-mono)] text-[12px] tracking-[0.06em] focus:outline-none"
             style={{
               color:         "var(--fg)",
+              opacity:       active ? 1 : 0.38,
               borderBottom:  active ? "1px solid var(--fg-muted)" : "1px solid transparent",
               paddingBottom: "1px",
+              transition:    "opacity 150ms ease",
             }}
-            animate={{ opacity: active ? 1 : 0.38 }}
-            whileHover={{ opacity: active ? 1 : 0.75 }}
-            transition={{ duration: 0.2, ease: EASE }}
+            onMouseEnter={(e) => { if (!active) e.currentTarget.style.opacity = "0.75"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = active ? "1" : "0.38"; }}
             aria-pressed={active}
           >
             {label}
-          </motion.button>
+          </button>
         );
       })}
     </nav>

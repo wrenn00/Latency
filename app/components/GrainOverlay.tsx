@@ -1,15 +1,18 @@
 "use client";
 
-// Static SVG turbulence grain — fixed to viewport at 3% opacity.
-// mix-blend-mode: overlay so it brightens light areas and darkens dark ones
-// for a subtle film-stock texture without a visual color cast.
+// Static SVG fractalNoise grain — fixed, pointer-events-none.
+//
+// mix-blend-mode was removed: it forces the browser to demote GPU compositor
+// layers and repaint the entire viewport on CPU every time any transform
+// animation runs underneath (e.g. card scale on hover). At 0.03 opacity the
+// visual difference is imperceptible.
 
 export function GrainOverlay() {
   return (
     <div
       aria-hidden
       className="fixed inset-0 z-[9995] pointer-events-none select-none"
-      style={{ opacity: 0.03, mixBlendMode: "overlay" }}
+      style={{ opacity: 0.05 }}
     >
       <svg
         width="100%"

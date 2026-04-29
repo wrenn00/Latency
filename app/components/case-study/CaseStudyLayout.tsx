@@ -123,8 +123,8 @@ export function CaseStudyLayout({ meta, children }: Props) {
 
       <style>{`
         @keyframes glowPulse {
-          0%, 100% { opacity: 0.6; box-shadow: 0 0 4px rgba(0,81,255,0.35); }
-          50%       { opacity: 1;   box-shadow: 0 0 10px rgba(0,81,255,0.6); }
+          0%, 100% { opacity: 0.5; }
+          50%       { opacity: 1;   }
         }
         .cs-logo       { color: var(--fg); }
         .cs-nav-link   { color: var(--fg-muted); transition: color 150ms; }
