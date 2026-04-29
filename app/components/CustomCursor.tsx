@@ -60,11 +60,32 @@ export function CustomCursor() {
       }
     }
 
+    // Dev-only frame-gap monitor — logs warning when frames drop below 60fps
+    // Remove this block once performance is confirmed stable
+    let lastMoveTime = 0;
+    let slowFrames = 0;
+    let slowWindow = performance.now();
+    const DEV = process.env.NODE_ENV !== "production";
+
     // Raw mousemove — only stores coords, triggers RAF if not running
     function onMove(e: MouseEvent) {
       target.x = e.clientX;
       target.y = e.clientY;
       scheduleRaf();
+
+      if (DEV) {
+        const now = performance.now();
+        const gap = now - lastMoveTime;
+        if (lastMoveTime > 0 && gap > 16) slowFrames++;
+        lastMoveTime = now;
+        if (now - slowWindow >= 1000) {
+          if (slowFrames >= 5) {
+            console.warn(`[Cursor] ${slowFrames} slow frames (>16ms) in the last second`);
+          }
+          slowFrames = 0;
+          slowWindow = now;
+        }
+      }
     }
 
     // Hover detection — capture phase prevents child-crossing flicker

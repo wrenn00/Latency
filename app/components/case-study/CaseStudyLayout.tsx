@@ -95,6 +95,7 @@ export function CaseStudyLayout({ meta, children }: Props) {
               width={meta.imageWidth}
               height={meta.imageHeight}
               className="w-full h-auto"
+              sizes="(max-width: 640px) 100vw, 600px"
               priority
             />
           </div>
