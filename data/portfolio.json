@@ -14,9 +14,21 @@
       "year": "2025",
       "order": 1,
       "accentColor": "#2D6A4F",
-      "description": "광복 80주년과 식목일 80주년이 겹치는 역사적 의미를 담은 포스터. 안중근 의사의 손에서 자라나는 나무를 통해 '희생을 바탕으로 한 나라의 번영'을 시각적으로 표현했다. 80이라는 숫자를 손가락의 형상으로 치환하고, 지역별 식목 적기를 손가락 위에 배치하여 정보 전달과 상징을 동시에 수행했다.",
+      "description": "광복 80주년과 식목일 80주년이 겹치는 역사적 의미를 담은 포스터. 안중근 의사의 손에서 자라나는 나무를 통해 '희생을 바탕으로 한 나라의 번영'을 시각적으로 표현했다.",
       "role": "Concept · Visual Design · Information Hierarchy",
       "client": "산림청"
+    },
+    {
+      "id": "world-ocean-forum",
+      "title": "세계해양포럼 포스터",
+      "categoryId": "graphic",
+      "thumbnail": "/images/works/world-ocean-forum.jpg",
+      "year": "2025",
+      "order": 2,
+      "accentColor": "#0D3B6E",
+      "description": "세계해양포럼의 주제 '초불확실성 시대, 파도를 넘어'를 시각화한 포스터. 복합적 글로벌 위기를 거대한 파도로 형상화하고 1인칭 항해 시점을 통해 지속 가능한 미래로의 돌파구를 상징적으로 표현했다.",
+      "role": "Concept · Visual Design · Symbolic Translation",
+      "client": "세계해양포럼"
     }
   ]
 }
