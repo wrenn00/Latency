@@ -84,11 +84,12 @@ export function ProjectDetailClient({ work, nextWork }: Props) {
         style={{ background: "var(--bg)" }}
       >
         {/* ── NAV ──────────────────────────────────────────────────── */}
-        <nav className="flex items-center justify-between px-6 sm:px-10 pt-7 sm:pt-9 shrink-0">
+        {/* relative z-10 creates a stacking context above the hero's position:relative layer */}
+        <nav className="relative z-10 flex items-center justify-between px-6 sm:px-10 pt-7 sm:pt-9 shrink-0 pointer-events-auto">
           <Link
             href="/"
             data-interactive="true"
-            className="flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.18em] uppercase"
+            className="flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] sm:text-[12px] tracking-[0.18em] uppercase cursor-none"
             style={{ color: "var(--fg)" }}
           >
             LATENCY
@@ -107,7 +108,7 @@ export function ProjectDetailClient({ work, nextWork }: Props) {
                 key={label}
                 href={href}
                 data-interactive="true"
-                className="transition-opacity duration-150"
+                className="cursor-none transition-opacity duration-150"
                 style={{ color: "var(--fg-muted)" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
@@ -119,7 +120,7 @@ export function ProjectDetailClient({ work, nextWork }: Props) {
         </nav>
 
         {/* ── BACK LINK ────────────────────────────────────────────── */}
-        <div className="px-6 sm:px-10 pt-8 pb-0">
+        <div className="relative z-10 px-6 sm:px-10 pt-8 pb-0">
           <Link
             href="/work"
             data-interactive="true"
@@ -139,17 +140,19 @@ export function ProjectDetailClient({ work, nextWork }: Props) {
           style={{
             aspectRatio: "16 / 9",
             maxHeight: "80vh",
-            background: work.accentColor,
+            background: work.accentColor || "var(--bg-elevated)",
           }}
         >
-          <Image
-            src={work.images[0]}
-            alt={work.title}
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
+          {work.images[0] && (
+            <Image
+              src={work.images[0]}
+              alt={work.title}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          )}
           {/* Gradient overlay */}
           <div
             className="absolute inset-0 pointer-events-none"
