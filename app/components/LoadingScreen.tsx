@@ -27,7 +27,7 @@ export function LoadingScreen({ onDone }: LoadingScreenProps) {
       {!exiting && (
         <motion.div
           key="loader"
-          className="fixed inset-0 z-[9998] flex flex-col items-center justify-center"
+          className="fixed inset-0 z-[9998] flex flex-col items-center justify-center pointer-events-none"
           style={{ background: "#000000" }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: EASE }}

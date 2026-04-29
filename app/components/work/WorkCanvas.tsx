@@ -126,7 +126,7 @@ function WorkCanvasInner() {
     <div className="fixed inset-0 overflow-hidden" style={{ background: "var(--bg)" }} role="main">
 
       {/* ── Z-1: Fullscreen background media (two layers for crossfade) ── */}
-      <div className="absolute inset-0" aria-hidden>
+      <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <ProjectBackground work={workA} visible={layerA.visible} soundOn={isSoundOn} reduced={reduced} />
         <ProjectBackground work={workB} visible={layerB.visible} soundOn={isSoundOn} reduced={reduced} />
       </div>
@@ -185,8 +185,9 @@ function WorkCanvasInner() {
         <MediaControls activeWork={activeWork} allWorks={filteredWorks} reduced={reduced} />
 
         {/* ─ CENTER: Work list (or empty state) ──────────────────────── */}
-        <div className="absolute inset-0 flex items-center pointer-events-auto">
-          <div className="pl-[8vw] pr-[8vw] w-full max-w-[820px] overflow-hidden">
+        {/* pointer-events-none on the fullscreen positioning shell — list items handle their own events */}
+        <div className="absolute inset-0 flex items-center pointer-events-none">
+          <div className="pl-[8vw] pr-[8vw] w-full max-w-[820px] overflow-hidden pointer-events-auto">
             <ProjectList works={filteredWorks} reduced={reduced} />
           </div>
         </div>

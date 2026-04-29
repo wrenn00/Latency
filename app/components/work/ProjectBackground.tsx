@@ -43,7 +43,7 @@ export function ProjectBackground({ work, visible, soundOn, reduced }: Props) {
   const transition = { duration: reduced ? 0.1 : FADE_DURATION, ease: [0.22, 1, 0.36, 1] as const };
 
   return (
-    <motion.div className="absolute inset-0" animate={{ opacity }} transition={transition} aria-hidden>
+    <motion.div className="absolute inset-0 pointer-events-none" animate={{ opacity }} transition={transition} aria-hidden>
       {work.videoUrl ? (
         <video
           ref={videoRef}
@@ -71,7 +71,7 @@ function ProceduralBackground({ work, reduced }: { work: Work; reduced: boolean 
   const c = work.accentColor || "#0051FF";
 
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ background: "var(--bg)" }}>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ background: "var(--bg)" }}>
       <div
         className="absolute inset-0"
         style={{ background: `radial-gradient(ellipse 70% 60% at 55% 45%, ${c}55 0%, ${c}18 45%, transparent 72%)` }}
