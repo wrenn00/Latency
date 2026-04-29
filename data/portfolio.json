@@ -1,8 +1,8 @@
 {
   "categories": [
-    { "id": "uiux",             "name": "UI/UX",             "order": 1 },
-    { "id": "xr",               "name": "XR Design",          "order": 2 },
-    { "id": "graphic",          "name": "Graphic Design",     "order": 3 },
+    { "id": "uiux",              "name": "UI/UX",             "order": 1 },
+    { "id": "xr",                "name": "XR Design",         "order": 2 },
+    { "id": "graphic",           "name": "Graphic Design",    "order": 3 },
     { "id": "advertising-design","name": "Advertising design","order": 4 }
   ],
   "works": [
@@ -13,7 +13,10 @@
       "thumbnail": "/images/works/arbor-day-80th.png",
       "year": "2025",
       "order": 1,
-      "accentColor": "#2D6A4F"
+      "accentColor": "#2D6A4F",
+      "description": "광복 80주년과 식목일 80주년이 겹치는 역사적 의미를 담은 포스터. 안중근 의사의 손에서 자라나는 나무를 통해 '희생을 바탕으로 한 나라의 번영'을 시각적으로 표현했다. 80이라는 숫자를 손가락의 형상으로 치환하고, 지역별 식목 적기를 손가락 위에 배치하여 정보 전달과 상징을 동시에 수행했다.",
+      "role": "Concept · Visual Design · Information Hierarchy",
+      "client": "산림청"
     }
   ]
 }

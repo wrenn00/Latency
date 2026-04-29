@@ -28,6 +28,9 @@ export interface Work {
   year: string;
   order: number;
   accentColor: string;
+  description?: string;
+  role?: string;
+  client?: string;
   videoUrl?: string;
   posterUrl?: string;
 }
@@ -40,6 +43,9 @@ interface RawWork {
   year: string;
   order: number;
   accentColor?: string;
+  description?: string;
+  role?: string;
+  client?: string;
   videoUrl?: string;
   posterUrl?: string;
   [key: string]: unknown;
@@ -68,9 +74,12 @@ export function getWorks(): Work[] {
       thumbnail:   w.thumbnail,
       year:        w.year,
       order:       w.order,
-      accentColor: w.accentColor ?? "#0051FF",
-      videoUrl:    w.videoUrl,
-      posterUrl:   w.posterUrl,
+      accentColor:  w.accentColor ?? "#0051FF",
+      description:  w.description,
+      role:         w.role,
+      client:       w.client,
+      videoUrl:     w.videoUrl,
+      posterUrl:    w.posterUrl,
     }));
 }
 
