@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  DanWord, BetweenWord, TimingWord, LatencyWord, HatsWord,
-  UiUxWord, GraphicDesignWord, AdvertisingWord,
-  ThingsWord, XrDesignWord, DiscomfortWord,
-} from "./components/InlineInteraction";
 import { LiveClock } from "./components/LiveClock";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+const PARAGRAPHS = [
+  "안녕하세요, 디자이너 다은입니다.",
+  "저는 행동과 반응 사이의 시간을 디자인합니다.\n단순히 어떻게 보이는지가 아니라, 언제 일어나는지에 집중합니다.",
+  "저는 'LATENCY'라는 관점으로 작업합니다.\n대부분의 디자이너가 화면을 바라본다면, 저는 그 사이에 존재하는 순간을 설계합니다.\n빠른 것이 목표가 아니라, 정확한 타이밍이 중요하다고 생각합니다.",
+  "UI/UX에서는 정보가 사용자에게 도달하는 '순간'을 설계하고,\n그래픽 디자인에서는 시각적 리듬과 여백을 통해 시선을 조율합니다.\n광고에서는 메시지가 전달되는 타이밍에 따라 전혀 다른 결과가 만들어지며,\nXR에서는 반응이 느껴지는 그 순간을 설계합니다.",
+  "저는 경험이 완성되는 순간을 설계합니다.",
+];
 
 function HeroParagraph() {
   const [visible, setVisible] = useState(false);
@@ -22,51 +25,32 @@ function HeroParagraph() {
 
   return (
     <motion.div
-      className="text-[14px] sm:text-[15px] leading-[1.85]"
-      style={{ color: "var(--fg)" }}
       initial={{ opacity: 0, y: 6 }}
       animate={visible ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, ease: EASE }}
     >
-      <p className="mb-5">
-        안녕하세요,{" "}
-        <span data-interactive="true"><DanWord /></span>
-        입니다. 저는{" "}
-        <span data-interactive="true"><BetweenWord /></span>
-        {" "}행동과 반응 사이의 시간을 디자인합니다. 인터랙션 디자인을 기반으로, 무엇이 어떻게 보이는지가 아니라{" "}
-        <span data-interactive="true"><TimingWord /></span>
-        {" "}— 언제, 어떤 타이밍에 일어나는지에 집중합니다.
-      </p>
-
-      <p className="mb-5">
-        {" "}
-        <span data-interactive="true"><LatencyWord /></span>
-        라는 이름으로 작업합니다. 대부분의 디자이너가 화면을 바라본다면, 저는 그{" "}
-        <span data-interactive="true"><BetweenWord /></span>
-        을 봅니다. 빠름이 목표가 아니라, 적절한 타이밍이 목표입니다.
-      </p>
-
-      <p>
-        다양한{" "}
-        <span data-interactive="true"><HatsWord /></span>
-        을 씁니다.{" "}
-        <span data-interactive="true"><UiUxWord /></span>
-        에서는 정보가 정확히 필요한 순간에 도달하도록 설계합니다.{" "}
-        <span data-interactive="true"><GraphicDesignWord /></span>
-        에서는 시각적 리듬이 시선을 이끕니다.{" "}
-        <span data-interactive="true"><AdvertisingWord /></span>
-        에서, 제대로 된 메시지와 어긋난 메시지는 완전히 다른{" "}
-        <span data-interactive="true"><ThingsWord /></span>
-        입니다.{" "}
-        <span data-interactive="true"><XrDesignWord /></span>
-        에서, 움직임과 반응 사이의 지연은 몰입과{" "}
-        <span data-interactive="true"><DiscomfortWord /></span>
-        을 가르는 경계입니다.
-      </p>
+      <div
+        className="flex flex-col"
+        style={{ gap: "1.6em" }}
+      >
+        {PARAGRAPHS.map((text, i) => (
+          <p
+            key={i}
+            className="text-[17px] sm:text-[19px] leading-[1.78]"
+            style={{
+              color:         i === PARAGRAPHS.length - 1 ? "var(--fg)" : "var(--fg-muted)",
+              letterSpacing: "-0.01em",
+              whiteSpace:    "pre-line",
+            }}
+          >
+            {text}
+          </p>
+        ))}
+      </div>
 
       <p
-        className="mt-8 text-[11px] tracking-[0.06em]"
-        style={{ color: "var(--fg-muted)", animation: "gentlePulse 3s ease-in-out infinite" }}
+        className="mt-10 text-[11px] tracking-[0.06em]"
+        style={{ color: "var(--fg-muted)", opacity: 0.45, animation: "gentlePulse 3s ease-in-out infinite" }}
       >
         스크롤하여 둘러보기
       </p>
@@ -109,7 +93,7 @@ export default function Page() {
                 key={label}
                 href={href}
                 data-interactive="true"
-                className="cursor-none transition-opacity duration-150 focus:outline-none"
+                className="cursor-none transition-all duration-150 focus:outline-none"
                 style={{ color: "var(--fg-muted)" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-muted)")}
@@ -122,7 +106,7 @@ export default function Page() {
 
         {/* Hero copy */}
         <div className="flex-1 flex items-center justify-center px-6 sm:px-10 overflow-hidden">
-          <div className="w-full max-w-[720px]">
+          <div className="w-full max-w-[760px]">
             <HeroParagraph />
           </div>
         </div>
@@ -156,6 +140,17 @@ export default function Page() {
           </div>
         </motion.footer>
       </section>
+
+      <style>{`
+        @keyframes glowPulse {
+          0%, 100% { opacity: 0.5; }
+          50%       { opacity: 1; }
+        }
+        @keyframes gentlePulse {
+          0%, 100% { opacity: 0.45; }
+          50%       { opacity: 0.25; }
+        }
+      `}</style>
     </>
   );
 }
