@@ -171,21 +171,32 @@ export function IntroReveal({ onComplete }: { onComplete?: () => void }) {
         <div key={e.id} className={`pos-effect pos-effect--${e.kind}`} style={{ left: e.x, top: e.y }} />
       ))}
 
-      {/* Text body */}
-      <div className="px-6 sm:px-10 mx-auto w-full" style={{ maxWidth: 760 }}>
-        <div className="flex flex-col" style={{ gap: "1.5em" }}>
+      {/* Text body — padded to clear fixed nav (header ~72px) + breathing room */}
+      <div
+        className="px-6 sm:px-10 mx-auto w-full"
+        style={{ maxWidth: 720, paddingTop: "clamp(96px, 14vh, 160px)", paddingBottom: "clamp(80px, 10vh, 120px)" }}
+      >
+        <div className="flex flex-col" style={{ gap: "1.4em" }}>
           {BLOCKS.map(block => {
             const isRevealed = revealed.has(block.idx);
             return (
-              <div key={block.idx} className="flex flex-col" style={{ gap: "0.08em" }}>
+              <div key={block.idx} style={{ lineHeight: 0 }}>
                 {block.lines.map((line, li) => (
-                  <p key={li} className="text-[17px] sm:text-[21px] leading-[1.75]" style={{ letterSpacing: "-0.01em" }}>
+                  <p
+                    key={li}
+                    style={{
+                      fontSize: "clamp(18px, 2.2vw, 24px)",
+                      lineHeight: 1.7,
+                      letterSpacing: "-0.01em",
+                      marginBottom: li < block.lines.length - 1 ? "0.1em" : 0,
+                    }}
+                  >
                     {line.map((part, pi) => {
                       if (part.type === "text") {
                         return (
                           <span key={pi} style={{
-                            filter:     isRevealed ? "blur(0px)" : "blur(7px)",
-                            color:      isRevealed ? "var(--fg)" : "rgba(255,255,255,0.22)",
+                            filter:     isRevealed ? "blur(0px)" : "blur(6px)",
+                            color:      isRevealed ? "var(--fg)" : "rgba(255,255,255,0.35)",
                             transition: reducedMotion.current ? "none" : "filter 600ms ease-out, color 600ms ease-out",
                           }}>
                             {part.v}
@@ -253,13 +264,14 @@ function Capsule({ id, label, isClicked, isAnimating, staggerIdx, allDone, onCli
       disabled={isClicked}
       className={`kw-cap ${isAnimating ? `eff-${id}` : ""}`}
       style={{
-        display: "inline-flex", alignItems: "center", gap: id === "timing" ? 6 : 0,
+        display: "inline-flex", alignItems: "center", gap: id === "timing" ? 5 : 0,
         position: "relative",
         border: `1px solid ${allDone && id !== "latency" ? "rgba(255,255,255,0)" : "rgba(255,255,255,0.6)"}`,
-        borderRadius: "100px", padding: "3px 12px",
+        borderRadius: "100px", padding: "2px 11px",
         background: "transparent", color: "var(--fg)",
         cursor: isClicked ? "default" : "pointer",
-        fontSize: "inherit", lineHeight: "inherit", verticalAlign: "baseline",
+        fontSize: "inherit", lineHeight: 1, verticalAlign: "middle",
+        margin: "0 2px",
         transition: "border-color 1s ease, background 150ms",
         animation: `capEnter 400ms ease-out ${staggerIdx * 100}ms both`,
         overflow: "hidden",

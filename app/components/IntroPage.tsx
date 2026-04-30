@@ -91,8 +91,8 @@ export function IntroPage({ works, categories, initialView }: Props) {
           </nav>
         </header>
 
-        {/* Reveal body — scrollable, vertically centered */}
-        <div className="flex-1 overflow-y-auto flex items-center py-8">
+        {/* Reveal body — scrollable with top clearance for fixed nav */}
+        <div className="flex-1 overflow-y-auto flex items-center">
           <IntroReveal onComplete={() => setView("works")} />
         </div>
 
