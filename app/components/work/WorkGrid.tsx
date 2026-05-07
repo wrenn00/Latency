@@ -1,13 +1,9 @@
 "use client";
 
-import { memo, useRef, useState, useEffect } from "react";
+import { memo, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { Work } from "@/lib/db";
-
-// ── Module-level singleton: only one card plays at a time ─────────────────────
-// Object wrapper keeps the reference mutable across closures.
-const playing = { vid: null as HTMLVideoElement | null };
 
 interface Props {
   works: Work[];
@@ -52,24 +48,27 @@ export function WorkGrid({ works }: Props) {
           opacity: 0;
           animation: cardEnter 320ms ease forwards;
         }
+        /* Video scale on hover — GPU composited, no layout cost */
+        .wg-card video {
+          transition: transform 280ms ease;
+          will-change: transform;
+        }
+        .wg-card:hover video { transform: scale(1.025); }
+        /* Fallback image scale (works without video) */
         .wg-thumb-img {
           transition: transform 280ms ease;
           will-change: transform;
         }
         .wg-card:hover .wg-thumb-img { transform: scale(1.025); }
+        /* Hover overlay */
         .wg-thumb-overlay {
           opacity: 0;
           transition: opacity 220ms ease;
         }
         .wg-card:hover .wg-thumb-overlay { opacity: 1; }
+        /* Title dim */
         .wg-title { transition: opacity 180ms ease; }
         .wg-card:hover .wg-title { opacity: 0.65; }
-        /* Video fade-in is handled via JS (v.style.opacity) to sync with play() */
-        .wg-video {
-          position: absolute; inset: 0; width: 100%; height: 100%;
-          object-fit: cover; opacity: 0;
-          transition: opacity 300ms ease;
-        }
       `}</style>
     </>
   );
@@ -83,104 +82,64 @@ interface CardProps {
 }
 
 const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardProps) {
-  const cardRef  = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [inView,   setInView]   = useState(false);
-  const [canHover, setCanHover] = useState(false);
-  const hoverTimer = useRef<number | null>(null);
 
-  // Detect hover-capable device (desktop pointer, not touch)
+  // iOS Safari fix: first frame doesn't render without nudging currentTime
   useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    setCanHover(mq.matches);
-    const update = (e: MediaQueryListEvent) => setCanHover(e.matches);
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  // IntersectionObserver: mount video element only when card enters viewport
-  // rootMargin 200px pre-activates 200px before the card is visible
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin: "200px" }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (hoverTimer.current) clearTimeout(hoverTimer.current);
-      const v = videoRef.current;
-      if (v) {
-        v.pause();
-        if (playing.vid === v) playing.vid = null;
-      }
-    };
-  }, []);
-
-  const handleEnter = () => {
-    if (!canHover || !work.video) return;
-    // 300ms intentional latency — Latency brand concept
-    hoverTimer.current = window.setTimeout(() => {
-      const v = videoRef.current;
-      if (!v) return;
-      // Stop any other currently-playing card
-      if (playing.vid && playing.vid !== v) {
-        playing.vid.pause();
-        playing.vid.currentTime = 0;
-        playing.vid.style.opacity = "0";
-      }
-      v.play()
-        .then(() => {
-          playing.vid = v;
-          v.style.opacity = "1";       // fade in
-        })
-        .catch(() => {/* autoplay blocked — fail silently */});
-    }, 300);
-  };
-
-  const handleLeave = () => {
-    if (hoverTimer.current) {
-      clearTimeout(hoverTimer.current);
-      hoverTimer.current = null;
-    }
     const v = videoRef.current;
-    if (v) {
-      v.pause();
-      v.currentTime = 0;
-      v.style.opacity = "0";           // fade out
-      if (playing.vid === v) playing.vid = null;
-    }
+    if (v) v.currentTime = 0.01;
+  }, []);
+
+  const play = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = 0;
+    v.play().catch(() => {/* autoplay blocked — fail silently */});
   };
 
-  const hasVideoPreview = !!work.video;
-  const hasVideoBadge   = work.type === "video" || hasVideoPreview;
+  const stop = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.pause();
+    v.currentTime = 0;
+  };
+
+  const hasVideo   = !!work.video;
+  const showBadge  = work.type === "video" || hasVideo;
 
   return (
     <div
-      ref={cardRef}
       className="wg-card"
       style={{ animationDelay: `${index * 55}ms` }}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
+      onMouseEnter={hasVideo ? play  : undefined}
+      onMouseLeave={hasVideo ? stop  : undefined}
+      onTouchStart={hasVideo ? play  : undefined}
+      onTouchEnd={hasVideo   ? stop  : undefined}
     >
       <button
         onClick={() => onSelect(work.id)}
         data-interactive="true"
         className="block w-full text-left cursor-none focus:outline-none"
       >
-        {/* Thumbnail area */}
+        {/* Media container */}
         <div
           className="relative w-full overflow-hidden"
           style={{ aspectRatio: "4 / 5", background: work.accentColor || "#111" }}
         >
-          {/* PNG — always present, acts as poster */}
-          {work.thumbnail && (
+          {hasVideo ? (
+            // MP4 only — preload="auto" so first frame shows immediately on load
+            <video
+              ref={videoRef}
+              src={work.video}
+              muted
+              playsInline
+              loop
+              preload="auto"
+              aria-label={work.title}
+              className="absolute inset-0 w-full h-full object-cover block"
+            />
+          ) : work.thumbnail ? (
+            // Fallback PNG for works without video (e.g. YouTube-only entries)
             <Image
               src={work.thumbnail}
               alt={work.title}
@@ -190,25 +149,10 @@ const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardPr
               priority={eager}
               loading={eager ? undefined : "lazy"}
             />
-          )}
+          ) : null}
 
-          {/* Video — lazy-mounted: only when in viewport + hover-capable device + has video */}
-          {inView && canHover && work.video && (
-            <video
-              ref={videoRef}
-              src={work.video}
-              muted
-              loop
-              playsInline
-              preload="none"
-              poster={work.thumbnail}
-              aria-hidden
-              className="wg-video"
-            />
-          )}
-
-          {/* ▶ badge for any video work (hover-preview or YouTube) */}
-          {hasVideoBadge && (
+          {/* ▶ badge */}
+          {showBadge && (
             <div
               className="absolute top-2.5 right-2.5 pointer-events-none"
               style={{
