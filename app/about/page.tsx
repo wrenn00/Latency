@@ -1,18 +1,32 @@
 import Link from "next/link";
 import { Logo } from "@/app/components/Logo";
+import { PastelMetaballGraphic } from "@/components/about/PastelMetaballGraphic";
 
 export const metadata = {
   title: "About — LATENCY",
   description: "행동과 반응 사이의 시간을 디자인합니다.",
 };
 
+const PASTEL_LINE = "rgba(184,212,241,0.15)";
+
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div
       className="flex flex-col md:flex-row gap-6 md:gap-16 py-12 md:py-16"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+      style={{ borderTop: `1px solid ${PASTEL_LINE}` }}
     >
-      <div className="md:w-40 shrink-0">
+      <div className="md:w-40 shrink-0 flex items-start gap-2">
+        <span
+          style={{
+            display: "inline-block",
+            width: 4,
+            height: 4,
+            borderRadius: "50%",
+            background: "#B8D4F1",
+            marginTop: 3,
+            flexShrink: 0,
+          }}
+        />
         <span className="text-[11px] tracking-[0.1em] uppercase" style={{ color: "var(--fg-muted)" }}>
           {label}
         </span>
@@ -48,6 +62,23 @@ export default function AboutPage() {
             ))}
           </div>
         </nav>
+
+        {/* HERO — pastel graphic */}
+        <div className="flex flex-col items-center py-24 md:py-32 px-6">
+          <PastelMetaballGraphic />
+          <p
+            className="mt-8 text-center"
+            style={{
+              color: "#B8D4F1",
+              fontSize: 18,
+              fontWeight: 400,
+              lineHeight: 1.5,
+              letterSpacing: "0.01em",
+            }}
+          >
+            행동과 반응 사이의 시간을 디자인합니다.
+          </p>
+        </div>
 
         {/* CONTENT */}
         <div className="px-6 sm:px-10 md:px-16 pb-24" style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -89,7 +120,7 @@ export default function AboutPage() {
             </div>
           </Row>
 
-          <div className="py-16 md:py-20" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          <div className="py-16 md:py-20" style={{ borderTop: `1px solid ${PASTEL_LINE}` }}>
             <p
               className="text-[28px] sm:text-[40px] leading-[1.2] tracking-tight"
               style={{ fontWeight: 600 }}
@@ -103,7 +134,7 @@ export default function AboutPage() {
         {/* CONTACT */}
         <section
           className="flex flex-col items-center text-center px-6 py-20 md:py-32"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ borderTop: `1px solid ${PASTEL_LINE}` }}
         >
           <p className="text-[12px] tracking-[0.08em] uppercase mb-5" style={{ color: "var(--fg-muted)" }}>
             For collaborations and inquiries
@@ -138,7 +169,6 @@ export default function AboutPage() {
       </div>
 
       <style>{`
-        @keyframes glowPulse { 0%,100%{opacity:0.5;} 50%{opacity:1;} }
         .about-nav { transition: color 150ms, opacity 150ms; }
         .about-nav:hover { color: var(--fg) !important; opacity: 1 !important; }
         .about-mail { transition: opacity 150ms; }
