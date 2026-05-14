@@ -20,6 +20,10 @@ export default function EncTypographyPage() {
         { label: "CLIENT", value: "Personal Work" },
         { label: "YEAR",   value: "2025" },
       ]}
+      additionalImages={[
+        { src: "/images/works/chocolate_01.png", alt: "EnC 타이포그래픽 포스터 — 상세 1" },
+        { src: "/images/works/chocolate_02.png", alt: "EnC 타이포그래픽 포스터 — 상세 2" },
+      ]}
     />
   );
 }
