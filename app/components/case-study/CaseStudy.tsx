@@ -175,32 +175,34 @@ export function CaseStudy({
             ))}
           </div>
 
-          {/* Supplementary images */}
-          {additionalImages && additionalImages.length > 0 && (
-            <div className="mb-16 space-y-8">
-              {additionalImages.map((img, i) => (
-                <Image
-                  key={i}
-                  src={img.src}
-                  alt={img.alt}
-                  width={1600}
-                  height={1200}
-                  sizes="(max-width: 880px) 100vw, 840px"
-                  className="block w-full h-auto"
-                  quality={90}
-                />
-              ))}
-            </div>
-          )}
+        </div>{/* end centered column */}
 
-          {/* Footer */}
-          <div className="pb-16" style={{ borderTop: "1px solid var(--border)", paddingTop: "2.5rem" }}>
-            <Link href="/work" data-interactive="true" className="cs-back text-[12px] cursor-none">
-              ← Back to Work
-            </Link>
-          </div>
+        {/* Supplementary images — full-width, zero gap */}
+        {additionalImages && additionalImages.length > 0 && (
+          <section className="w-full" style={{ lineHeight: 0 }}>
+            {additionalImages.map((img, i) => (
+              <Image
+                key={i}
+                src={img.src}
+                alt={img.alt}
+                width={2400}
+                height={1600}
+                sizes="100vw"
+                className="block w-full h-auto"
+                style={{ margin: 0, padding: 0, display: "block" }}
+                quality={90}
+              />
+            ))}
+          </section>
+        )}
 
+        {/* Footer */}
+        <div className="px-6 sm:px-10 mx-auto pb-16" style={{ maxWidth: 840, borderTop: "1px solid var(--border)", paddingTop: "2.5rem" }}>
+          <Link href="/work" data-interactive="true" className="cs-back text-[12px] cursor-none">
+            ← Back to Work
+          </Link>
         </div>
+
       </div>
 
       <style>{`
