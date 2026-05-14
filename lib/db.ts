@@ -28,6 +28,8 @@ export interface Work {
   year: string;
   order: number;
   accentColor: string;
+  /** Grid column span. 1 = portrait (default), 2 = landscape. */
+  spanCols: 1 | 2;
   description?: string;
   role?: string;
   client?: string;
@@ -46,6 +48,7 @@ interface RawWork {
   year: string;
   order: number;
   accentColor?: string;
+  spanCols?: 1 | 2;
   description?: string;
   role?: string;
   client?: string;
@@ -81,6 +84,7 @@ export function getWorks(): Work[] {
       year:        w.year,
       order:       w.order,
       accentColor:  w.accentColor ?? "#B8D4F1",
+      spanCols:     w.spanCols ?? 1,
       description:  w.description,
       role:         w.role,
       client:       w.client,

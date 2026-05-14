@@ -1,5 +1,8 @@
 "use client";
 
+// spanCols rule: "spanCols": 1 for portrait works (default), "spanCols": 2 for landscape works.
+// Set in data/portfolio.json per work entry.
+
 import { memo, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -27,7 +30,8 @@ export function WorkGrid({ works }: Props) {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* 3-col desktop / 2-col tablet / 1-col mobile, dense fill for span-2 gaps */}
+      <div className="wg-grid">
         {works.map((work, i) => (
           <WorkCard
             key={work.id}
@@ -40,6 +44,24 @@ export function WorkGrid({ works }: Props) {
       </div>
 
       <style>{`
+        .wg-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-flow: dense;
+          gap: 24px;
+        }
+        @media (max-width: 1024px) {
+          .wg-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+          .wg-grid { grid-template-columns: 1fr; }
+        }
+
+        .wg-span-2 { grid-column: span 2; }
+        @media (max-width: 640px) {
+          .wg-span-2 { grid-column: span 1; }
+        }
+
         @keyframes cardEnter {
           from { opacity: 0; transform: translateY(10px); }
           to   { opacity: 1; transform: translateY(0);   }
@@ -54,7 +76,7 @@ export function WorkGrid({ works }: Props) {
           will-change: transform;
         }
         .wg-card:hover video { transform: scale(1.025); }
-        /* Fallback image scale (works without video) */
+        /* Fallback image scale */
         .wg-thumb-img {
           transition: transform 280ms ease;
           will-change: transform;
@@ -83,6 +105,7 @@ interface CardProps {
 
 const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const span2    = work.spanCols === 2;
 
   // iOS Safari fix: first frame doesn't render without nudging currentTime
   useEffect(() => {
@@ -104,12 +127,12 @@ const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardPr
     v.currentTime = 0;
   };
 
-  const hasVideo   = !!work.video;
-  const showBadge  = work.type === "video" || hasVideo;
+  const hasVideo  = !!work.video;
+  const showBadge = work.type === "video" || hasVideo;
 
   return (
     <div
-      className="wg-card"
+      className={`wg-card${span2 ? " wg-span-2" : ""}`}
       style={{ animationDelay: `${index * 55}ms` }}
       onMouseEnter={hasVideo ? play  : undefined}
       onMouseLeave={hasVideo ? stop  : undefined}
@@ -122,12 +145,15 @@ const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardPr
         className="block w-full text-left cursor-none focus:outline-none"
       >
         {/* Media container */}
-        <div
-          className="relative w-full overflow-hidden"
-          style={{ aspectRatio: "4 / 5", background: work.accentColor || "#111" }}
-        >
-          {hasVideo ? (
-            // MP4 only — preload="auto" so first frame shows immediately on load
+        {hasVideo ? (
+          /* Video works: fixed aspect ratio container */
+          <div
+            className="relative w-full overflow-hidden"
+            style={{
+              aspectRatio: span2 ? "16/9" : "4/5",
+              background: work.accentColor || "#111",
+            }}
+          >
             <video
               ref={videoRef}
               src={work.video}
@@ -138,43 +164,39 @@ const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardPr
               aria-label={work.title}
               className="absolute inset-0 w-full h-full object-cover block"
             />
-          ) : work.thumbnail ? (
-            // Fallback PNG for works without video (e.g. YouTube-only entries)
+            {showBadge && <VideoBadge />}
+            <div
+              className="wg-thumb-overlay absolute inset-0 pointer-events-none"
+              style={{ background: "rgba(0,0,0,0.14)" }}
+            />
+          </div>
+        ) : work.thumbnail ? (
+          /* Image-only works: natural ratio, no crop */
+          <div
+            className="relative w-full overflow-hidden"
+            style={{ background: work.accentColor || "#111" }}
+          >
             <Image
               src={work.thumbnail}
               alt={work.title}
-              fill
-              className="object-cover wg-thumb-img"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              width={span2 ? 1280 : 800}
+              height={span2 ? 720  : 1067}
+              className="w-full h-auto block wg-thumb-img"
+              sizes={
+                span2
+                  ? "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 66vw"
+                  : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              }
               priority={eager}
               loading={eager ? undefined : "lazy"}
             />
-          ) : null}
-
-          {/* ▶ badge */}
-          {showBadge && (
+            {showBadge && <VideoBadge />}
             <div
-              className="absolute top-2.5 right-2.5 pointer-events-none"
-              style={{
-                background: "rgba(0,0,0,0.55)",
-                borderRadius: 3,
-                padding: "3px 6px",
-                fontSize: 11,
-                fontFamily: "var(--font-mono)",
-                color: "rgba(255,255,255,0.85)",
-                letterSpacing: "0.06em",
-              }}
-            >
-              ▶
-            </div>
-          )}
-
-          {/* Hover overlay */}
-          <div
-            className="wg-thumb-overlay absolute inset-0 pointer-events-none"
-            style={{ background: "rgba(0,0,0,0.14)" }}
-          />
-        </div>
+              className="wg-thumb-overlay absolute inset-0 pointer-events-none"
+              style={{ background: "rgba(0,0,0,0.14)" }}
+            />
+          </div>
+        ) : null}
 
         {/* Meta */}
         <div className="mt-3">
@@ -195,3 +217,22 @@ const WorkCard = memo(function WorkCard({ work, index, eager, onSelect }: CardPr
     </div>
   );
 });
+
+function VideoBadge() {
+  return (
+    <div
+      className="absolute top-2.5 right-2.5 pointer-events-none"
+      style={{
+        background: "rgba(0,0,0,0.55)",
+        borderRadius: 3,
+        padding: "3px 6px",
+        fontSize: 11,
+        fontFamily: "var(--font-mono)",
+        color: "rgba(255,255,255,0.85)",
+        letterSpacing: "0.06em",
+      }}
+    >
+      ▶
+    </div>
+  );
+}
