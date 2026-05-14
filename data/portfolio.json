@@ -56,6 +56,15 @@
       "accentColor": "#1C1C2E"
     },
     {
+      "id": "orbital-synthesis-lab",
+      "title": "Orbital Synthesis Lab",
+      "categoryId": "graphic",
+      "thumbnail": "/images/works/orbital-synthesis-lab.png",
+      "year": "2025",
+      "order": 6,
+      "accentColor": "#0D0D1A"
+    },
+    {
       "id": "the-red-line",
       "title": "The Red Line",
       "categoryId": "advertising-design",
