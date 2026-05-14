@@ -196,7 +196,7 @@ export function IntroReveal({ onComplete }: { onComplete?: () => void }) {
                         return (
                           <span key={pi} style={{
                             filter:     isRevealed ? "blur(0px)" : "blur(6px)",
-                            color:      isRevealed ? "var(--fg)" : "rgba(255,255,255,0.35)",
+                            color:      isRevealed ? "#B8D4F1" : "rgba(255,255,255,0.35)",
                             transition: reducedMotion.current ? "none" : "filter 600ms ease-out, color 600ms ease-out",
                           }}>
                             {part.v}
